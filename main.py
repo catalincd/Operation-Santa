@@ -6,7 +6,7 @@ from src import Utils
 from src import Solver
 
 Starting = "Finland"
-Countries = ["Romania", "Algeria", "Zimbabwe", "US Virgin Islands", "Fiji"]
+Countries = ["Romania", "Turkey", "Algeria", "US Virgin Islands", "Fiji"]
 
 
 AllCountries = Utils.GetCountryIDS()

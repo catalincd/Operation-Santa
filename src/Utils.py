@@ -9,6 +9,9 @@ def GetStringFromFile(path):
 def GetCountryIDS():
     lines = GetLinesFromFile('country-capitals.csv')
     dict = {}
+
+    dict["END"] = -1
+
     for i in range(0, len(lines)):
         comma = lines[i].find(',')
         dict[lines[i][:comma]] = i

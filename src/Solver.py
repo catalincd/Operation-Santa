@@ -23,25 +23,45 @@ def TSP(Countries, AllDistances):
                         Origin[k][i] = (cur_index, j)
                         CountryList[k][i] = j
                         C[k][i] = cur_sum
+
     all_index = (1 << n) - 1
-    return (min([(C[all_index][i] + AllDistances[Countries[0]][Countries[i]], i) for i in range(n)]), CountryList)
+
+    StartingIdx = -1
+    KM = np.inf
+    Route = []
+
+    for i in range(n):
+        currentDistance = C[all_index][i] + AllDistances[Countries[0]][Countries[i]]
+        if currentDistance < KM:
+            KM = currentDistance
+            StartingIdx = i
+
+    Start = (all_index, i)
+
+    while Start != -1:
+        if CountryList[Start[0]][Start[1]] != '-':
+            Route.append(Countries[CountryList[Start[0]][Start[1]]])
+        Start = Origin[Start[0]][Start[1]]
+
+    Route.reverse()
+
+    return (KM, Route)
 
 
 def Exec(Starting, Countries, AllCountries, AllDistances):
 
     Countries.insert(0, Starting)
+    Countries.append("END")
     for i in range(0, len(Countries)):
         Countries[i] = AllCountries[Countries[i]]
 
     Result = TSP(Countries, AllDistances)
 
-
     NamedCountries = []
-    for i in Result[1][-1]:
+    for i in Result[1]:
         if i == '-':
             continue
         NamedCountries.append(list(AllCountries.keys())[list(AllCountries.values()).index(i)])
 
-    print(Result[1])
 
     return (Result[0], NamedCountries)
