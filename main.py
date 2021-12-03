@@ -1,24 +1,19 @@
 import os
 import sys
-from flask import Flask, render_template, send_file
 
-sys.path.append('./src')
-import PageGenerator
+sys.path.append('/src')
+from src import Utils
+from src import Solver
 
-
-app = Flask(__name__)
-
-@app.route("/")
-def indexRoute():
-    return PageGenerator.GetPageString('index.html', {'clatiteString':'bonchisString'})
+Starting = "Finland"
+Countries = ["Romania", "Algeria", "Zimbabwe", "US Virgin Islands", "Fiji"]
 
 
-@app.route('/res/<path:subpath>')
-def show_subpath(subpath):
-    path = './templates/res/' + subpath
-    if os.path.exists(path):
-        return send_file(path)
-    else:
-        return PageGenerator.GetPageString('404.html')
-    
+AllCountries = Utils.GetCountryIDS()
+AllDistances = Utils.GetDistancesGraph()
+
+
+Route = Solver.Exec(Starting, Countries, AllCountries, AllDistances)
+print(Route)
+
 
