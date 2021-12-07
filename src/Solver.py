@@ -17,7 +17,12 @@ def TSP(Countries, AllDistances):
                 for j in S:
                     if j == i: continue
                     cur_index = k ^ (1 << i)
-                    cur_sum = C[cur_index][j] + AllDistances[Countries[j]][Countries[i]]
+                    cur_sum = C[cur_index][j]
+                    jId = AllDistances[Countries[j]]
+                    iId = Countries[i]
+                    if len(jId) <= iId:
+                        continue
+                    cur_sum += jId[iId]
                     if cur_sum < C[k][i]:
                         #do stuff add country to list
                         Origin[k][i] = (cur_index, j)

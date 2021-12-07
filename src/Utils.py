@@ -1,3 +1,5 @@
+import csv
+
 def GetLinesFromFile(path):
     f = open(path, "r")
     return f.readlines()
@@ -5,6 +7,18 @@ def GetLinesFromFile(path):
 def GetStringFromFile(path):
     f = open(path, "r")
     return f.read()
+
+def GetTimeZones():#Thank you Iustin
+    timezone = {}
+
+    timezone["END"] = 99
+
+    with open('country-capitals.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        ok = 0
+        for l in csv_reader:
+            timezone[l[0]] = int(-float(l[2]) // 15 + 12)
+    return timezone
 
 def GetCountryIDS():
     lines = GetLinesFromFile('country-capitals.csv')
