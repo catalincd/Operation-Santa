@@ -1,7 +1,18 @@
 import sys
 import time
 from src import Wrapper
+from src import Utils
 start_time = time.time()
+
+
+
+
+'''
+adaugati in Countries si Starting ce vreti voi
+daca vreti toate tarile:
+
+Countries = [x for x in Utils.GetCountryIDS().keys() if x != Starting]
+'''
 
 
 Starting = "Kiribati"

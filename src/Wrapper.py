@@ -57,7 +57,8 @@ def Exec(Starting, Countries, BatchSize = 15, GiftsDistanceRatio = 0.2):
         GIFTS = 0
 
         for i in TimezoneArray:
-            GIFTS += AllChildren[i]
+            if i != "END":
+                GIFTS += AllChildren[i]
 
         for i in range(0, len(TimezoneArray) - 1):
             KM += AllDistances[AllCountries[TimezoneArray[i]]][AllCountries[TimezoneArray[i+1]]]
@@ -99,11 +100,12 @@ def Exec(Starting, Countries, BatchSize = 15, GiftsDistanceRatio = 0.2):
 
         Timetable[Route[i]] = "{}:{}".format(hrs, mins)
 
-        if i < len(Route)-1:
+        if i < len(Route)-1 and Route[i] != "END":
+            CurrentGifts += AllChildren[Route[i]]
             CurrentTime += AllChildren[Route[i]] / GPH
             CurrentTime += AllDistances[AllCountries[Route[i]]][AllCountries[Route[i + 1]]] / KMH
 
-        CurrentGifts += AllChildren[Route[i]]
+
         AllGifts.append(CurrentGifts)
 
 
