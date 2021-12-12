@@ -1,4 +1,5 @@
 import csv
+import json
 
 def GetLinesFromFile(path):
     f = open(path, "r")
@@ -7,6 +8,10 @@ def GetLinesFromFile(path):
 def GetStringFromFile(path):
     f = open(path, "r")
     return f.read()
+
+def GetChildren():
+    with open('copii_la_fiecare_tara.json', 'r') as file:
+        return json.loads(file.read().rstrip())
 
 def GetTimeZones():#Thank you Iustin
     timezone = {}
@@ -66,3 +71,4 @@ def GetDistancesGraph():
 
 
     return distances
+
