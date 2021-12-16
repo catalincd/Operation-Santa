@@ -11,7 +11,9 @@ def GetStringFromFile(path):
 
 def GetChildren():
     with open('copii_la_fiecare_tara.json', 'r') as file:
-        return json.loads(file.read().rstrip())
+        dict = json.loads(file.read().rstrip())
+        dict["END"] = 9999999999
+        return dict
 
 def GetTimeZones():#Thank you Iustin
     timezone = {}

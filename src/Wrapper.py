@@ -1,7 +1,7 @@
 from src import Solver
 from src import Utils
 
-def Exec(Starting, Countries, BatchSize = 15, GiftsDistanceRatio = 0.2):
+def Exec(Starting, Countries, BatchSize = 12, GiftsDistanceRatio = 0.7):
 
     AllCountries = Utils.GetCountryIDS()
     AllDistances = Utils.GetDistancesGraph()
@@ -45,6 +45,9 @@ def Exec(Starting, Countries, BatchSize = 15, GiftsDistanceRatio = 0.2):
     ALL_KM = 0
     ALL_GIFTS = 0
 
+    Timetable = {}
+    CurrentTime = -2
+
     while len(TimezoneCountries) > 0:
         while AllTimezones[TimezoneCountries[0]] == CurrentTimeZone:
             TimezoneArray.append(TimezoneCountries[0])
@@ -64,10 +67,39 @@ def Exec(Starting, Countries, BatchSize = 15, GiftsDistanceRatio = 0.2):
             KM += AllDistances[AllCountries[TimezoneArray[i]]][AllCountries[TimezoneArray[i+1]]]
 
         if len(TimezoneCountries) > 0:
-            KM += AllDistances[AllCountries[TimezoneArray[len(TimezoneArray) - 1]]][AllCountries[TimezoneCountries[0]]]
+            KM += AllDistances[AllCountries[TimezoneArray[-1]]][AllCountries[TimezoneCountries[0]]]
 
-        ALL_KM = max(ALL_KM, KM)
-        ALL_GIFTS = max(ALL_GIFTS, GIFTS)
+        KMH = int(KM * (1.0 / GiftsDistanceRatio)) * 1.2
+        GPH = int(GIFTS * (1.0 / (1.0 - GiftsDistanceRatio))) * 1.5
+
+
+        for i in range(0, len(TimezoneArray)):
+
+            CurrentTime += 0.02
+
+            if int(CurrentTime) < AllTimezones[TimezoneArray[i]]:
+                CurrentTime = AllTimezones[TimezoneArray[i]]
+
+
+            if KMH > 0:
+                if i < len(TimezoneArray) - 1:
+                    CurrentTime += AllDistances[AllCountries[TimezoneArray[i]]][AllCountries[TimezoneArray[i + 1]]] / KMH
+                elif len(TimezoneCountries) > 0:
+                    CurrentTime += AllDistances[AllCountries[TimezoneArray[i]]][AllCountries[TimezoneCountries[0]]] / KMH
+
+            if GPH > 0:
+                CurrentTime += AllChildren[TimezoneArray[i]] / GPH
+
+            hrs = int(CurrentTime)
+            mins = int((CurrentTime - int(CurrentTime)) * 60)
+
+            if hrs < 10:
+                hrs = "0{}".format(hrs)
+            if mins < 10:
+                mins = "0{}".format(mins)
+
+            Timetable[TimezoneArray[i]] = "{}:{}".format(hrs, mins)
+
 
         TimezoneArray.clear()
 
@@ -76,34 +108,18 @@ def Exec(Starting, Countries, BatchSize = 15, GiftsDistanceRatio = 0.2):
 
         CurrentTimeZone = AllTimezones[TimezoneCountries[0]]
 
+
+
+
+
     AllGifts = []
     CurrentGifts = 0
 
-    KMH = int(ALL_KM * (1.0 / GiftsDistanceRatio))
-    GPH = int(ALL_GIFTS * (1.0  / (1.0 - GiftsDistanceRatio)))
-
-    Timetable = {}
-    CurrentTime = 0.0
-
     for i in range(len(Route)):
-
-        if int(CurrentTime) < AllTimezones[Route[i]]:
-            CurrentTime = AllTimezones[Route[i]]
-
-        hrs = int(CurrentTime)
-        mins = int((CurrentTime - int(CurrentTime)) * 60)
-
-        if hrs < 10:
-            hrs = "0{}".format(hrs)
-        if mins < 10:
-            mins = "0{}".format(mins)
-
-        Timetable[Route[i]] = "{}:{}".format(hrs, mins)
 
         if i < len(Route)-1 and Route[i] != "END":
             CurrentGifts += AllChildren[Route[i]]
-            CurrentTime += AllChildren[Route[i]] / GPH
-            CurrentTime += AllDistances[AllCountries[Route[i]]][AllCountries[Route[i + 1]]] / KMH
+
 
 
         AllGifts.append(CurrentGifts)
